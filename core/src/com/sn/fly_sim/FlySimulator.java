@@ -3,18 +3,11 @@ package com.sn.fly_sim;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Align;
 import com.sn.fly_sim.helpers.GameInfo;
 import com.sn.fly_sim.scenes.MainMenu;
-import com.sn.fly_sim.scenes.TestMenu;
-import sun.rmi.rmic.Main;
+import com.sn.fly_sim.scenes.GameScene;
 
-import java.awt.*;
 
 public class FlySimulator extends Game {
 	private SpriteBatch batch;
@@ -25,7 +18,7 @@ public class FlySimulator extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		setScreen(new MainMenu(this));
+		setScreen(new GameScene(this));
 	}
 
 	@Override
@@ -34,7 +27,7 @@ public class FlySimulator extends Game {
 		super.render();
 	}
 
-	void inputCheck(){
+	private void inputCheck(){
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
             Gdx.app.exit();
         }
@@ -42,7 +35,7 @@ public class FlySimulator extends Game {
 			setScreen(new MainMenu(this));
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
-			setScreen(new TestMenu(this));
+			setScreen(new GameScene(this));
 		}
 	}
 
