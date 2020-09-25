@@ -5,15 +5,20 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.utils.Array;
+import com.sn.fly_sim.Bullet;
 import com.sn.fly_sim.FlySimulator;
+import com.sn.fly_sim.characters.nonPlayer.Enemies;
+import com.sn.fly_sim.characters.Plane;
 import com.sn.fly_sim.helpers.GameInfo;
 import com.sn.fly_sim.systems.isInputCheck;
 
 public class GameScene implements Screen, isInputCheck {
     private FlySimulator game;
     private Texture bg;
-    private Sprite player;
+    private Plane player;
+    private Array<Bullet> bullets;
+    private Array<Enemies> enemies;
     private float deltaSpeedX;
     private float deltaSpeedY;
 
@@ -21,13 +26,20 @@ public class GameScene implements Screen, isInputCheck {
         this.game = game;
 
         //bg = new Texture("Options BG.png");
-        player = new Sprite(new Texture("Plane.png"));
+        // Инициализируем самолет игрока
+        player = new Plane(new Texture("Plane.png"));
         player.setPosition(GameInfo.WIDTH  * 0.1f , GameInfo.HEIGHT / 2.0f);
         player.getTexture().setAnisotropicFilter(GL20.GL_LINEAR);
         player.setScale(5.0f);
 
+        // Инициализируем массив пуль в котором будут хранится существующие выстрелы
+        // сделаннне игроком или ИИ
+        bullets = new Array<>();
+        enemies = new Array<>();
+
         deltaSpeedX = 0;
         deltaSpeedY = 0;
+
     }
 
     @Override
@@ -39,19 +51,41 @@ public class GameScene implements Screen, isInputCheck {
     public void render(float delta) {
         inputCheck();
 
+        for (Bullet i : bullets){
+            i.move();
+            collisionCheck(i);
+        }
+
         Gdx.gl.glClearColor(.2f, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         game.getBatch().begin();
         game.getBatch().draw(player, player.getX(), player.getY(),
                             player.getWidth() * 1.2f, player.getHeight() * 1.2f);
+        for (Bullet i : bullets){
+            game.getBatch().draw(i, i.getX(), i.getY(), i.getWidth(), i.getHeight());
+        }
         game.getBatch().end();
+    }
+
+    public void collisionCheck(Bullet bullet){
+        for (Enemies i : enemies){
+            if ( bullet.getX() > i.getX() && bullet.getX() < i.getWidth()){
+                if ( bullet.getY() > i.getY() && bullet.getY() < i.getHeight()){
+                    i.takeDamage(bullet);
+                }
+            }
+        }
     }
 
     @Override
     public void inputCheck() {
         checkVerticaly();
         checkHorisontaly();
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+            bullets.add(player.fire());
+        }
     }
 
     private void checkHorisontaly(){
