@@ -3,8 +3,9 @@ package com.sn.fly_sim;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.sn.fly_sim.systems.NonStatic;
 
-public class Bullet extends Sprite {
+public class Bullet extends Sprite implements NonStatic {
     private Vector2 direction;
     private float speed;
     private int damage;
@@ -21,7 +22,7 @@ public class Bullet extends Sprite {
         this.direction = direction;
     }
 
-    public void move() {
+    public void perTick() {
         // ToDo сделать перемещение с учетом направления
         setPosition(getX() + (speed * direction.x), getY() + (speed * direction.y));
     }
@@ -42,6 +43,4 @@ public class Bullet extends Sprite {
     public void setDamage(int damage) {
         this.damage = damage;
     }
-
-
 }
