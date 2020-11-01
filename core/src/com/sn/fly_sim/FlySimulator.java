@@ -3,7 +3,11 @@ package com.sn.fly_sim;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sn.fly_sim.scenes.LoginScene;
 import com.sn.fly_sim.scenes.MainMenu;
+
+import java.util.Date;
+import java.util.Timer;
 
 public class FlySimulator extends Game {
 	// ToDo Реализовать класс текущего пользователя
@@ -15,7 +19,7 @@ public class FlySimulator extends Game {
 	public void create() {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
-		this.setScreen(new MainMenu(this));
+		this.setScreen(new LoginScene(this));
 	}
 
 	@Override
@@ -28,5 +32,8 @@ public class FlySimulator extends Game {
 		super.dispose();
 		batch.dispose();
 		font.dispose();
+		System.out.println("end");
 	}
+
+
 }

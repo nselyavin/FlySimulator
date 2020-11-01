@@ -3,12 +3,17 @@ package com.sn.fly_sim.scenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.sn.fly_sim.FlySimulator;
 import com.sn.fly_sim.helpers.GameInfo;
+import org.graalvm.compiler.lir.LabelRef;
 
+import javax.swing.text.Style;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +21,7 @@ public class MainMenu implements Screen {
 
     final FlySimulator game;
     OrthographicCamera camera;
+    private Label hellouser;
     private Texture logo;
     private Texture startBtn;
     private Texture reloginBtn;
@@ -33,14 +39,20 @@ public class MainMenu implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, GameInfo.WIDTH, GameInfo.HEIGHT);
 
-        logo = new Texture("E:\\Project\\Java\\FlySimulator\\core\\assets\\logo.png");
+        Label.LabelStyle style  = new Label.LabelStyle();
+        style.font = new BitmapFont();
+        style.fontColor = Color.YELLOW;
+        style.font.getData().setScale(1.4f);
+        hellouser = new Label("Welcome " + game.currentPlayer.getName() + "!", style);
+        hellouser.setPosition(10, 5 + hellouser.getHeight());
 
-        startBtn = new Texture("E:\\Project\\Java\\FlySimulator\\core\\assets\\startbtn.png");
-        reloginBtn = new Texture("E:\\Project\\Java\\FlySimulator\\core\\assets\\reloginbtn.png");
-        exitBtn = new Texture("E:\\Project\\Java\\FlySimulator\\core\\assets\\exitbtn.png");
-        startBtn_active = new Texture("E:\\Project\\Java\\FlySimulator\\core\\assets\\startbtn_active.png");
-        reloginBtn_active = new Texture("E:\\Project\\Java\\FlySimulator\\core\\assets\\reloginbtn_active.png");
-        exitBtn_active = new Texture("E:\\Project\\Java\\FlySimulator\\core\\assets\\exitbtn_active.png");
+        logo = new Texture("logo.png");
+        startBtn = new Texture("startbtn.png");
+        reloginBtn = new Texture("reloginbtn.png");
+        exitBtn = new Texture("exitbtn.png");
+        startBtn_active = new Texture("startbtn_active.png");
+        reloginBtn_active = new Texture("reloginbtn_active.png");
+        exitBtn_active = new Texture("exitbtn_active.png");
 
         btns = new ArrayList<>();
         btns.add(startBtn);
@@ -90,7 +102,7 @@ public class MainMenu implements Screen {
                     tex.getHeight()
                     );
         }
-
+        hellouser.draw(game.batch, 1.0f);
         game.batch.end();
     }
 

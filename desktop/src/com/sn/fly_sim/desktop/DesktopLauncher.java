@@ -22,5 +22,7 @@ public class DesktopLauncher {
 		config.foregroundFPS = GameInfo.FPS;
 
 		new LwjglApplication(new FlySimulator(), config);
+
+		System.out.println("end");
 	}
 }
