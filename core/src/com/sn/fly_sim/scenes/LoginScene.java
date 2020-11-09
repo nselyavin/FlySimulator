@@ -142,21 +142,23 @@ public class LoginScene implements Screen {
         // Reading ENTER input and calling login function
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             if (loginInputted) {
+                // Check pass input
                 if (passText.length() == 0) {
                     error.setText("Password cannot be empty");
                 } else {
-                    if (!signup) {
-                        game.currentPlayer = PlayerHandler.getPlayer(loginText, passText);
+                    if (!signup) { // Login
+                        game.currentPlayer = game.playerHandler.getPlayer(loginText, passText);
 
                         if (game.currentPlayer != null) {
                             game.setScreen(new MainMenu(game));
                         } else {
                             error.setText("Failed login. Check your login");
                         }
-                    } else {
-                        if (!PlayerHandler.createPlayer(loginText, passText)) {
+                    } else { // Register
+                        if (game.playerHandler.getPlayer(loginText, passText) != null) {
                             error.setText("User with this nickname already created");
                         } else {
+                            game.playerHandler.createPlayer(loginText, passText);
                             error.setText("");
                             signup = false;
                         }
@@ -164,6 +166,7 @@ public class LoginScene implements Screen {
                 }
             }
 
+            // Check login input
             if (loginText.length() == 0) {
                 error.setText("Nickname cannot be empty");
             } else {

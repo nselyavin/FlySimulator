@@ -1,34 +1,77 @@
 package com.sn.fly_sim.helpers;
 
+import com.sn.fly_sim.FlySimulator;
 import com.sn.fly_sim.Player;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.ResultSet;
 
 
-public class PlayerHandler {
+public class PlayerHandler extends DBConfigs {
     // ToDo пока функции работают как пустышки, реализовать тело, когда подключу бд
+    Connection dbConnection;
 
-    public static Player getPlayer(String loginText, String passText) {
-        // Где-то здесь считал данные об игроке с таким логином и паролем
-        int rec = 1000; // Имитация
+    public PlayerHandler() throws SQLException, ClassNotFoundException {
+        getDbConnection();
+    }
 
-        if(loginText.equals("ASD"))
-            return null;
+    public void getDbConnection() throws SQLException, ClassNotFoundException {
+        Class.forName("com.mysql.jdbc.Driver");
 
-        // ToDo программс должна создавать новый объект игрока с данными
-        // Считанными из места хранения данных игроков
-        return new Player(loginText, rec);
+        String connectionStr = "jdbc:mysql://" + dbHost + ":" + dbPort + '/' + dbName;
+
+        dbConnection = DriverManager.getConnection(connectionStr, dbUser, dbPass);
+        System.out.println("nasd");
+    }
+
+
+    public Player getPlayer(String login, String pass) {
+        ResultSet resultSet = null;
+        String select = "SELECT * FROM " + DBConfigs.USER_TABLE + " WHERE "
+                + DBConfigs.USER_NAME + "=? AND " + DBConfigs.USER_PASS + "=?";
+
+        try {
+            // Считанными из места хранения данных игроков
+            PreparedStatement prSt = dbConnection.prepareStatement(select);
+            prSt.setString(1, login);
+            prSt.setString(2, pass);
+
+            resultSet = prSt.executeQuery();
+
+            if (resultSet != null) {
+                resultSet.next();
+                String name = resultSet.getString(2);
+                int record = resultSet.getInt(4);
+                return new Player(name, record);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /*
     Если фукнция возвращает false, значит игрок с таким ником уже существует. И создание не удалось
     Если true, значит создание успешно
      */
-    public static boolean createPlayer(String login, String password){
-        // Здесь код добавляющий игрока в базу данных
+    public void createPlayer(String login, String password){
+        String insert = "INSERT INTO " + DBConfigs.USER_TABLE + "("
+                + DBConfigs.USER_NAME + "," + DBConfigs.USER_PASS + ","
+                + DBConfigs.USER_RECORD + ")"
+                + "VALUES(?, ?, ?)";
 
-        if (login.equals("ASD"))
-            return false;
+        try {
+            PreparedStatement prSt = dbConnection.prepareStatement(insert);
+            prSt.setString(1, login);
+            prSt.setString(2, password);
+            prSt.setInt(3, 0);
 
-        return true;
+            prSt.executeUpdate();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     public static void rewriterecord(String name, int record){
