@@ -23,9 +23,30 @@ public class PlayerHandler extends DBConfigs {
         String connectionStr = "jdbc:mysql://" + dbHost + ":" + dbPort + '/' + dbName;
 
         dbConnection = DriverManager.getConnection(connectionStr, dbUser, dbPass);
-        System.out.println("nasd");
     }
 
+    public boolean checkForLogin(String login){
+        ResultSet resultSet = null;
+        String select = "SELECT * FROM " + DBConfigs.USER_TABLE + " WHERE "
+                + DBConfigs.USER_NAME + "=?";
+
+        try {
+            // Считанными из места хранения данных игроков
+            PreparedStatement prSt = dbConnection.prepareStatement(select);
+            prSt.setString(1, login);
+
+            resultSet = prSt.executeQuery();
+            int count = 0;
+            while(resultSet.next())
+                count++;
+
+            if (count > 0)
+                return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public Player getPlayer(String login, String pass) {
         ResultSet resultSet = null;
@@ -74,7 +95,16 @@ public class PlayerHandler extends DBConfigs {
         }
     }
 
-    public static void rewriterecord(String name, int record){
-
+    public void rewriterecord(String login, int record){
+        ResultSet resultSet = null;
+        String update = "UPDATE " + DBConfigs.USER_TABLE +
+        " SET " +  DBConfigs.USER_RECORD + " = " + record +
+        " WHERE (" +  DBConfigs.USER_NAME + " = " + DBConfigs.USER_NAME + ")";
+        try {
+            PreparedStatement prSt = dbConnection.prepareStatement(update);
+            prSt.execute();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 }

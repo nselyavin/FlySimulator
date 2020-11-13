@@ -45,7 +45,6 @@ public class FlySimulator extends Game  {
 		super.dispose();
 		batch.dispose();
 		font.dispose();
-		System.out.println("end");
 	}
 
 

@@ -54,7 +54,7 @@ public class LoginScene implements Screen {
 
         help = new Label("F1 - to sign-up. F2 - to reset. ENTER - to input", style2);
         help.setPosition(GameInfo.WIDTH / 2.0f - help.getWidth() / 2.0f, help.getHeight());
-        error = new Label("123", style2);
+        error = new Label(" ", style2);
         error.setPosition(GameInfo.WIDTH / 2.0f - help.getWidth() / 2.0f,
                 help.getHeight() + 10 + error.getHeight());
 
@@ -155,7 +155,7 @@ public class LoginScene implements Screen {
                             error.setText("Failed login. Check your login");
                         }
                     } else { // Register
-                        if (game.playerHandler.getPlayer(loginText, passText) != null) {
+                        if (game.playerHandler.checkForLogin(loginText)) {
                             error.setText("User with this nickname already created");
                         } else {
                             game.playerHandler.createPlayer(loginText, passText);
